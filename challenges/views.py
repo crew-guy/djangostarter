@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 
 # Create your views here.
 
@@ -23,11 +23,12 @@ def monthly_challenge(request, month):
         challenge_text = monthly_challenges[month]
         return HttpResponse(challenge_text)
     except:
-        return HttpResponseNotFound("This number month aint supported!")
+        return HttpResponseNotFound("This month aint supported!")
 
 
 def monthly_challenge_by_num(request, month):
-    challenge_text = monthly_challenges[month]
-    if challenge_text == None:
-        return HttpResponseNotFound("This number month aint supported!")
-    return HttpResponse(challenge_text)
+    months = list(monthly_challenges.keys())
+    if month > len(months):
+        return HttpResponseNotFound('This number month aint supported!')
+    redirect_month = months[month - 1]
+    return HttpResponseRedirect('/challenges/' + redirect_month)
